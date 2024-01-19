@@ -7,16 +7,27 @@ USER root
 #Get packages + pip stuff
 RUN apt-get update && apt-get install -y python-pip && apt-get install -y git
 
-COPY requirements.txt .
 RUN apt-get --yes install libgeos-dev
 RUN pip install install conda
 
 #Download and setup LPDAAC (WIP)
+WORKDIR /LPDAAC
+
+  #Get the download script from NASA
 RUN wget -O config.yml https://git.earthdata.nasa.gov/projects/LPDUR/repos/daac_data_download_python/raw/DDD_WindowsOS.yml?at=refs%2Fheads%2Fmain
 RUN wget -O DAACDataDownload.py https://git.earthdata.nasa.gov/projects/LPDUR/repos/daac_data_download_python/raw/DAACDataDownload.py?at=refs%2Fheads%2Fmain
+  #Make sure the script is executable
+RUN chmod 555 DAACDataDownload.py config.yml
 RUN sed -i '$d' config.yml
 
+  #Get the list of data we need to download
+COPY downloads.txt .
+COPY .netrc /home/jovyan
+RUN python DAACDataDownload.py -dir . -f downloads.txt
+
 #GHISA pip dependencies
+WORKDIR /home/jovyan
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 RUN pip install --upgrade tornado
