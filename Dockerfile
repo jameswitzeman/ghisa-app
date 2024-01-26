@@ -12,6 +12,7 @@ RUN pip install install conda
 
 #Download and setup LPDAAC (WIP)
 WORKDIR /LPDAAC
+COPY ./format.py .
 
   #Get the download script from NASA
 RUN wget -O config.yml https://git.earthdata.nasa.gov/projects/LPDUR/repos/daac_data_download_python/raw/DDD_WindowsOS.yml?at=refs%2Fheads%2Fmain
@@ -19,6 +20,9 @@ RUN wget -O DAACDataDownload.py https://git.earthdata.nasa.gov/projects/LPDUR/re
   #Make sure the script is executable
 RUN chmod 555 DAACDataDownload.py config.yml
 RUN sed -i '$d' config.yml
+
+#Format the data docs
+RUN python format.py
 
   #Get the list of data we need to download
 COPY downloads.txt .
@@ -41,7 +45,8 @@ RUN git clone https://github.com/jameswitzeman/GHISA_Spectral_Visualization_App/
 WORKDIR /work
 RUN cp /GHISA_Spectral_Visualization_App/GHISA_Visualization.ipynb .
 
-RUN chmod 555 GHISA_Visualization.ipynb
+#MAKE SURE THIS IS 555 IN PROD
+RUN chmod 777 GHISA_Visualization.ipynb
 
 #WORKDIR /home/joyvan/
 #COPY .netrc .
