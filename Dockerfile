@@ -16,19 +16,19 @@ WORKDIR /LPDAAC
 COPY ./format.py .
 
   #Get the download script from NASA
-RUN wget -O config.yml https://git.earthdata.nasa.gov/projects/LPDUR/repos/daac_data_download_python/raw/DDD_WindowsOS.yml?at=refs%2Fheads%2Fmain
 RUN wget -O DAACDataDownload.py https://git.earthdata.nasa.gov/projects/LPDUR/repos/daac_data_download_python/raw/DAACDataDownload.py?at=refs%2Fheads%2Fmain
   #Make sure the script is executable
-RUN chmod 555 DAACDataDownload.py config.yml
-RUN sed -i '$d' config.yml
+RUN chmod 555 DAACDataDownload.py
 
-#Format the data docs
-RUN python format.py
 
   #Get the list of data we need to download
 COPY downloads.txt .
-COPY .netrc /home/jovyan
+COPY netrc /home/jovyan/.netrc
 RUN python DAACDataDownload.py -dir . -f downloads.txt
+RUN rm .netrc
+
+#Format the data docs
+RUN python format.py
 
 #GHISA pip dependencies
 WORKDIR /home/jovyan
@@ -48,7 +48,5 @@ RUN cp /GHISA_Spectral_Visualization_App/GHISA_Visualization.ipynb .
 
 #MAKE SURE THIS IS 555 IN PROD
 RUN chmod 777 GHISA_Visualization.ipynb
+RUN chmod 777 /home/joyvan/work/GHISA_Visualization.ipynb
 
-#WORKDIR /home/joyvan/
-#COPY .netrc .
-#RUN chmod 744 .netrc
