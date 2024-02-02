@@ -42,9 +42,11 @@ RUN pip install --upgrade hvplot
 #Get the actual GHISA app, make it read/execute only for visitors
 WORKDIR /
 RUN git clone https://github.com/jameswitzeman/GHISA_Spectral_Visualization_App/
+RUN mv desis_spectral_library_data_release.csv /LPDAAC
+RUN mv prisma_spectral_library_data_release.csv /LPDAAC
 
 WORKDIR /work
-RUN cp /GHISA_Spectral_Visualization_App/GHISA_Visualization.ipynb .
+RUN mv /GHISA_Spectral_Visualization_App/GHISA_Visualization.ipynb .
 
 #MAKE SURE THIS IS 555 IN PROD
 RUN chmod 777 GHISA_Visualization.ipynb
