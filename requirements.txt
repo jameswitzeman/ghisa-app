@@ -10,6 +10,7 @@ panel
 hvplot
 tornado
 geemap
+pyarrow
 geoviews
 pandas
 geopandas
