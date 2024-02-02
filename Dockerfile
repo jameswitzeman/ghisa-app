@@ -3,6 +3,7 @@ FROM quay.io/jupyter/minimal-notebook
 
 SHELL ["/bin/bash", "-c"]
 USER root
+ENV DOCKER_STACKS_JUPYTER_CMD=notebook
 
 #Get packages + pip stuff
 RUN apt-get update && apt-get install -y python-pip && apt-get install -y git
