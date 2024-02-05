@@ -5,6 +5,7 @@ geemap
 ipyleaflet
 ipywidgets
 ipympl
+pyarrow
 npm
 panel
 hvplot
