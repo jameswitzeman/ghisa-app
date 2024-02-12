@@ -1,9 +1,13 @@
+import sys
+#Short Python script, deletes the first 6 lines of whatever file path is given to it
 
-with open('GHISACONUS_2008_001_speclib.csv', 'r') as ghisar:
+path = sys.argv[1]
+
+with open(path, 'r') as ghisar:
     lines = ghisar.readlines()
     ptr = 1
 
-    with open('GHISACONUS_2008_001_speclib.csv', 'w') as ghisaw:
+    with open(path, 'w') as ghisaw:
         for line in lines:
             if ptr > 6:
                 ghisaw.write(line)

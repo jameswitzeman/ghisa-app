@@ -47,10 +47,14 @@ WORKDIR /LPDAAC
 RUN wget -O prisma_data.csv https://www.sciencebase.gov/catalog/file/get/62a91cc2d34ec53d2770f06d?f=__disk__cb%2F45%2F62%2Fcb4562caa9aaad6b4c55db13925f24b09aa7dbd3
 RUN wget -O desis_data.csv https://www.sciencebase.gov/catalog/file/get/62a91cc2d34ec53d2770f06d?f=__disk__d2%2F06%2Fe4%2Fd206e4e55fd1f545bd204e0475fcc7b5b7c9410d
 
-RUN python /LPDAAC/tag-delete.py
+RUN xlsx2csv --all GHISACASIA_EO1_Hyperion_2007_001.xlsx > GHISACASIA.csv 
+
+RUN python /LPDAAC/tag-delete.py GHISACASIA.csv
+RUN python /LPDAAC/tag-delete.py GHISACONUS_2008_001_speclib.csv 
 RUN python /LPDAAC/format.py
 
-RUN rm desis_data.py && rm prisma_data.py
+#Delete redundant data files. Consider commenting this line during debugging.
+RUN rm desis_data.csv && rm prisma_data.csv && rm GHISACASIA_EO1_Hyperion_2007_001.xlsx && rm GHISACONUS_2008_001_speclib.csv && rm GHISACASIA.csv
 
 WORKDIR /work
 RUN mv /GHISA_Spectral_Visualization_App/GHISA_Visualization.ipynb .

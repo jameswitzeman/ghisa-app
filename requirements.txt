@@ -3,6 +3,8 @@ numpy
 geopy
 geemap
 ipyleaflet
+xlsx2csv
+openpyxl
 ipywidgets
 ipympl
 pyarrow

@@ -20,6 +20,9 @@ print("Loading Hyperion data...")
 core_data = pd.read_csv(r'/LPDAAC/GHISACONUS_2008_001_speclib.csv',
                      low_memory=False, index_col=False, na_values='NaN') 
   #GHISA-CASIA data
+#casia_data = pd.read_csv(r'/LPDAAC/GHISACASIA.csv',
+#                    low_memory=False, index_col=False, na_values='NaN')
+#print(casia_data)
 
 print("Loaded ASD / Hyperion data.\n")
   #PRISMA data
@@ -39,8 +42,7 @@ to_rename = {'JD' : 'JulianDay',
              'Latitude' : 'Lat',
              'Crop Type' : 'Crop',
              'GAEZ' : 'AEZ',
-             'Image ID' : 'Image',
-             'Unique ID' : 'UniqueID'
+             'Image ID' : 'Image'
              }
 
     #Rename each column properly
@@ -62,12 +64,11 @@ core_data['Month'] = core_data['Month'].apply(lambda x: month_labels[x])
 core_data.insert(0, "Sensor", 'Hyperion')
 
     #Merge prisma and desis, capitalize months
-desis_data = desis_data.merge(prisma_data, how='outer')
+desis_data = pd.concat([desis_data, prisma_data], ignore_index=True)
 desis_data['Month'] = desis_data['Month'].str.capitalize()
-print(desis_data)
 
-    #Merge prisma/desis and hyperion
-core_data = core_data.merge(desis_data, how='outer')
+    #Merge hyperion with prisma/desis
+core_data = pd.concat([desis_data, core_data], ignore_index=True)
 
 # Formatting
 core_data['Month'] = core_data['Month'].replace(['NA'], 0)
@@ -112,4 +113,6 @@ core_data['Wavelength'] = core_data['Wavelength'].astype(float)
 
 print("All data ready.")
 print(core_data)
+print("Saving to core_data-long.csv...\n")
 core_data.to_csv("core_data-long.csv", index = False)
+print("Saved.\n")
